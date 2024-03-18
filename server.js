@@ -1,6 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv';
 import cors from 'cors';
+import userRoutes from './src/routes/userRoutes.js';
+import arduinoRoutes from './src/routes/arduinoRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -18,7 +20,7 @@ app.use((err, req, res, next) => {
   }));
 
 // Las rutas del API
-// app.use('/SPs',);
+app.use('/', userRoutes, arduinoRoutes);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`El servidor esta corriendo en el puerto ${PORT}`);
