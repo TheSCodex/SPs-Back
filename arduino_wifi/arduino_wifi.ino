@@ -1,3 +1,32 @@
+#include <WiFiS3.h>
+
+const int redPin = 2;
+const int greenPin = 3;
+const int sensorPin = 4;
+
+const char* ssid = "";
+const char* password = ""; 
+
+WiFiServer server(80);
+unsigned long lastActivationTime = 0;
+
+void setup() {
+  Serial.begin(9600);
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("Connected to WiFi");
+  server.begin();
+
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(sensorPin, INPUT);
+}
+
+
 void loop(){
   // Verificar si hay un cliente conectado
   WiFiClient client = server.available();
