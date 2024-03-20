@@ -5,7 +5,7 @@ export const ledController = async (req, res) => {
 
   try {
     // replace 'arduino-ip-address' with the IP address of your Arduino
-    const response = await fetch(`http://192.168.100.84/LED=${state.toUpperCase()}`);
+    const response = await fetch(`http://192.168.3.220/LED=${state.toUpperCase()}`);
     
     if (!response.ok) {
       throw new Error('Network response was not ok');

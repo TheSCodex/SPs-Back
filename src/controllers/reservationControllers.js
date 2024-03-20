@@ -109,38 +109,3 @@ export const checkOutReservation = (req, res) => {
     }
   );
 };
-
-// export const checkOutReservation = (req, res) => {
-//     const id = req.params.id;
-//     const checkOutTime = new Date();
-//     connection.query("SELECT checkInTime FROM reservations WHERE id = ?", [id], (err, results) => {
-//       if (err) {
-//         console.error(err);
-//         return res.status(500).json({ message: "Error Interno" });
-//       }
-//       const checkInTime = new Date(results[0].checkInTime);
-//       const hours = Math.ceil((checkOutTime - checkInTime) / 1000 / 60 / 60);
-//       const totalCost = hours * hourlyRate;
-  
-//       // Validate payment
-//       validatePayment(id, totalCost, (err, paymentResult) => {
-//         if (err) {
-//           console.error(err);
-//           return res.status(500).json({ message: "Error Interno" });
-//         }
-//         if (!paymentResult.success) {
-//           return res.status(400).json({ message: "Payment failed" });
-//         }
-  
-//         // If payment is successful, update reservation
-//         connection.query("UPDATE reservations SET checkOutTime = ?, totalCost = ?, status = 'Completed' WHERE id = ?", [checkOutTime, totalCost, id], (err, results) => {
-//           if (err) {
-//             console.error(err);
-//             return res.status(500).json({ message: "Error Interno" });
-//           }
-//           res.status(200).json({ message: "Checked out", totalCost: totalCost });
-//         });
-//       });
-//     });
-//   };
-  
