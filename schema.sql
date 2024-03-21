@@ -3,8 +3,7 @@ CREATE TABLE `sps`.`users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `userName` VARCHAR(15) NOT NULL,
   `email` VARCHAR(60) NOT NULL,
-  `password` VARCHAR(10) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(60) NOT NULL,
   `recoveryCode` INT NULL,
   PRIMARY KEY (`id`)
 );

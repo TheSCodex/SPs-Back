@@ -34,11 +34,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Algo se rompió!');
 });
 
-app.use(cors({
-  origin: process.env.ORIGIN,
-  methods: 'GET, POST, PUT, DELETE, PATCH',
-  allowedHeaders: 'Content-Type',
-}));
+app.use(cors());  
 
 app.get('/events', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
@@ -55,7 +51,8 @@ app.get('/events', (req, res) => {
 
 app.use('/', userRoutes, arduinoRoutes);
 
+const URL = process.env.URL;
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`El servidor esta corriendo en el puerto ${PORT}`);
+app.listen(PORT, URL, () => {
+  console.log(`El servidor está corriendo en http://${URL}:${PORT}`);
 });
