@@ -215,7 +215,7 @@ export const getUserById = (req, res) => {
 
 // Controlador para crear un nuevo usuario (POST)
 export const createUser = (req, res) => {
-  const { userName, email, password, name } = req.body;
+  const { userName, email, password } = req.body;
   // Generar un salt  para agregar seguridad
   const saltRounds = 10; // Número de rondas de hashing
   bcrypt.hash(password, saltRounds, (err, hash) => {
@@ -224,8 +224,8 @@ export const createUser = (req, res) => {
       return res.status(500).json({ message: "Error Interno" });
     }
     connection.query(
-      "INSERT INTO users (userName, email, password, name) VALUES (?, ?, ?, ?, ?)",
-      [userName, email, hash, name],
+      "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)",
+      [userName, email, hash],
       (dbErr, results) => {
         if (dbErr) {
           console.error(dbErr);
