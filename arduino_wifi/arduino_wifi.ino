@@ -1,21 +1,22 @@
 #include <WiFiS3.h>
 #include <PubSubClient.h>
 #include <ArduinoHttpClient.h>
-#define NUM_SENSORS 1
+#define NUM_SENSORS 5
 
-const int sensorPin[NUM_SENSORS] = {2};
+const int sensorPin[NUM_SENSORS] = {0,1,2,3,4};
 const int redPin[NUM_SENSORS] = {5};
 const int greenPin[NUM_SENSORS] = {6};
 
 const char* ssid = "Totalplay-5DAA";
 const char* password = "5DAAD5479GTARA2X"; 
-const char* mqtt_server = "192.168.100.32";
-const char* serverAddress = "192.168.100.32";
+const char* mqtt_server = "192.168.100.94";
+const char* serverAddress = "192.168.100.94";
 int serverPort = 8080;
 
-WiFiClient wifi;
-HttpClient httpClient = HttpClient(wifi, serverAddress, serverPort);
-PubSubClient client(wifi, mqtt_server);
+WiFiClient espClient1;
+WiFiClient espClient2;
+PubSubClient client(espClient1);
+HttpClient httpClient = HttpClient(espClient2, serverAddress, serverPort);
 
 unsigned long lastStateChangeTime[NUM_SENSORS] = {0};
 int lastState[NUM_SENSORS] = {-1};
@@ -47,7 +48,9 @@ void loop(){
   for(int i=0; i<NUM_SENSORS; i++){
     int value = digitalRead(sensorPin[i]);  //lectura digital de pin
 
-    Serial.print("Sensor value: ");
+    Serial.print("Sensor ");
+    Serial.print(i);
+    Serial.print(" value: ");
     Serial.println(value);
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());

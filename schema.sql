@@ -1,4 +1,5 @@
 CREATE DATABASE `sps`;
+DROP DATABASE `sps`;
 CREATE TABLE `sps`.`users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `userName` VARCHAR(15) NOT NULL,
@@ -50,3 +51,6 @@ INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot7', 1);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot8', 1);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot9', 1);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot10', 1);
+
+SELECT * FROM `sps`.`parkingSpots`;
+SELECT * FROM `sps`.`parkingstatuses`;
