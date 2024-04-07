@@ -8,7 +8,7 @@ import arduinoRoutes from './src/routes/arduinoRoutes.js';
 dotenv.config();
 
 const app = express();
-const client = mqtt.connect('mqtt://192.168.3.204:1883'); // replace with your MQTT server address and port
+const client = mqtt.connect('mqtt://192.168.100.94:1883'); // replace with your MQTT server address and port
 
 let clients = [];
 
