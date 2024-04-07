@@ -1,5 +1,15 @@
 import connection from "../db.js";
 
+export const getParkingStatus = (req, res) => {
+  connection.query("SELECT * FROM parkingSpots", (err, res) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error Interno" });
+    }
+    res.status(200).json(results);
+  })
+}
+
 export const changeStatusToOccupied = (req, res) => {
   const { spotId } = req.params;
   connection.query("UPDATE `sps`.`parkingSpots` SET `statusId` = (SELECT `id` FROM `sps`.`parkingStatuses` WHERE `statusName` = 'Occupied') WHERE `id` = ?", [spotId], (err, results) => {
