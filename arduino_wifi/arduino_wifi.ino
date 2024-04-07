@@ -15,7 +15,7 @@ int serverPort = 8080;
 
 WiFiClient wifi;
 HttpClient httpClient = HttpClient(wifi, serverAddress, serverPort);
-PubSubClient client(espClient);
+PubSubClient client(wifi, mqtt_server);
 
 unsigned long lastStateChangeTime[NUM_SENSORS] = {0};
 int lastState[NUM_SENSORS] = {-1};
