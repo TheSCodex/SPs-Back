@@ -8,7 +8,7 @@ import arduinoRoutes from './src/routes/arduinoRoutes.js';
 dotenv.config();
 
 const app = express();
-const client = mqtt.connect('mqtt://192.168.3.204:1883'); // replace with your MQTT server address and port
+const client = mqtt.connect('mqtt://192.168.3.204:1883');
 
 let clients = [];
 
@@ -51,7 +51,7 @@ app.get('/events', (req, res) => {
 
 app.use('/', userRoutes, arduinoRoutes);
 
-const URL = process.env.URL;
+const URL = process.env.ORIGIN;
 const PORT = process.env.PORT;
 app.listen(PORT, URL, () => {
   console.log(`El servidor está corriendo en http://${URL}:${PORT}`);

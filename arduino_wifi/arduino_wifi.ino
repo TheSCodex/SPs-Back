@@ -13,7 +13,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 unsigned long lastStateChangeTime[1] = {0};
-int lastState[1] = {-1}; // Initialize to an invalid state
+int lastState[1] = {-1};
 
 void setup() {
   Serial.begin(9600);
@@ -42,7 +42,6 @@ void loop(){
   for(int i=0; i<1; i++){
     int value = digitalRead(sensorPin[i]);  //lectura digital de pin
 
-    // Print the value read from the sensor
     Serial.print("Sensor value: ");
     Serial.println(value);
     Serial.print("IP Address: ");

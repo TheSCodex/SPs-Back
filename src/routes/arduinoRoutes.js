@@ -3,6 +3,7 @@ import * as arduinoControllers from '../controllers/arduinoControllers.js'
 
 const arduinoRoutes = express.Router();
 
-arduinoRoutes.get('/led/:state', arduinoControllers.ledController);
+arduinoRoutes.get('/status/occupied/:id', arduinoControllers.changeStatusToOccupied);
+arduinoRoutes.get('/status/unoccupied/:id', arduinoControllers.changeStatusToUnoccupied);
 
 export default arduinoRoutes;

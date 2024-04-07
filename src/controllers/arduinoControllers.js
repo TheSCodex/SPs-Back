@@ -1,19 +1,23 @@
-import fetch from 'node-fetch';
+import connection from "../db.js";
 
-export const ledController = async (req, res) => {
-  const { state } = req.params; // get the state from the request parameters
-
-  try {
-    // replace 'arduino-ip-address' with the IP address of your Arduino
-    const response = await fetch(`http://192.168.3.220/LED=${state.toUpperCase()}`);
-    
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+export const changeStatusToOccupied = (req, res) => {
+  const { spotId } = req.params;
+  connection.query("UPDATE `sps`.`parkingSpots` SET `statusId` = (SELECT `id` FROM `sps`.`parkingStatuses` WHERE `statusName` = 'Occupied') WHERE `id` = ?", [spotId], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal Error" });
     }
+    res.status(200).json({ message: "Parking spot status changed to Occupied" });
+  });
+};
 
-    res.send(`LED is ${state}`);
-  } catch (error) {
-    console.error('There has been a problem with your fetch operation:', error);
-    res.status(500).send('An error occurred while sending the GET request');
-  }
+export const changeStatusToUnoccupied = (req, res) => {
+  const { spotId } = req.params;
+  connection.query("UPDATE `sps`.`parkingSpots` SET `statusId` = (SELECT `id` FROM `sps`.`parkingStatuses` WHERE `statusName` = 'Unoccupied') WHERE `id` = ?", [spotId], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal Error" });
+    }
+    res.status(200).json({ message: "Parking spot status changed to Unoccupied" });
+  });
 };
