@@ -1,19 +1,20 @@
 #include <WiFiS3.h>
 #include <PubSubClient.h>
+#define NUM_SENSORS 1
 
-const int sensorPin[1] = {4};
-const int redPin[1] = {2};
-const int greenPin[1] = {3};
+const int sensorPin[NUM_SENSORS] = {2};
+const int redPin[NUM_SENSORS] = {5};
+const int greenPin[NUM_SENSORS] = {6};
 
-const char* ssid = "SM51";
-const char* password = "as1anSM51*"; 
-const char* mqtt_server = "192.168.3.204";
+const char* ssid = "Totalplay-5DAA";
+const char* password = "5DAAD5479GTARA2X"; 
+const char* mqtt_server = "192.168.100.94";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-unsigned long lastStateChangeTime[1] = {0};
-int lastState[1] = {-1};
+unsigned long lastStateChangeTime[NUM_SENSORS] = {0};
+int lastState[NUM_SENSORS] = {-1}; // Initialize to an invalid state
 
 void setup() {
   Serial.begin(9600);
@@ -26,7 +27,7 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   client.setServer(mqtt_server, 1883);
-  for(int i=0; i<1; i++){
+  for(int i=0; i<NUM_SENSORS; i++){
     pinMode(redPin[i], OUTPUT);
     pinMode(greenPin[i], OUTPUT);
     pinMode(sensorPin[i], INPUT);
@@ -39,7 +40,7 @@ void loop(){
   }
   client.loop();
 
-  for(int i=0; i<1; i++){
+  for(int i=0; i<NUM_SENSORS; i++){
     int value = digitalRead(sensorPin[i]);  //lectura digital de pin
 
     Serial.print("Sensor value: ");
