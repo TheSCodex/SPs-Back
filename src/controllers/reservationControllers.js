@@ -54,7 +54,7 @@ export const createReservation = (req, res) => {
     }
 
     const findSpotQuery =
-      "SELECT id FROM parkingSpots WHERE statusId = (SELECT id FROM parkingStatuses WHERE statusName = 'Available' OR statusName = 'Unoccupied') LIMIT 1";
+      "SELECT id FROM parkingSpots WHERE statusId IN (SELECT id FROM parkingStatuses WHERE statusName = 'Available' OR statusName = 'Unoccupied') LIMIT 1";
     connection.query(findSpotQuery, (err, results) => {
       if (err) {
         return connection.rollback(() => {
@@ -64,7 +64,7 @@ export const createReservation = (req, res) => {
       }
 
       if (results.length === 0) {
-        return res.status(400).json({ message: "No available parking spots" });
+        return res.status(400).json({ message: "No hay lugares de estacionamiento disponibles" });
       }
 
       const spotId = results[0].id;
@@ -99,7 +99,7 @@ export const createReservation = (req, res) => {
               }
 
               res.status(201).json({
-                message: "Reservation created",
+                message: "Reservación creada",
                 reservationId: results.insertId,
               });
             });
