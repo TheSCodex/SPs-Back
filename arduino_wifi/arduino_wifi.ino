@@ -2,10 +2,12 @@
 #include <PubSubClient.h>
 #include <ArduinoHttpClient.h>
 #define NUM_SENSORS 5
+#define NUM_LEDRED 5
+#define NUM_LEDGREN 5
 
 const int sensorPin[NUM_SENSORS] = {0,1,2,3,4};
-const int redPin[NUM_SENSORS] = {5};
-const int greenPin[NUM_SENSORS] = {6};
+const int redPin[NUM_LEDRED] = {5,6,7,8,9};
+const int greenPin[NUM_LEDGREN] = {10,11,12,13,A0};
 
 const char* ssid = "Totalplay-5DAA";
 const char* password = "5DAAD5479GTARA2X"; 

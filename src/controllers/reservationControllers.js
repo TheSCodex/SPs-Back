@@ -64,7 +64,9 @@ export const createReservation = (req, res) => {
       }
 
       if (results.length === 0) {
-        return res.status(400).json({ message: "No hay lugares de estacionamiento disponibles" });
+        return res
+          .status(400)
+          .json({ message: "No hay lugares de estacionamiento disponibles" });
       }
 
       const spotId = results[0].id;
@@ -112,17 +114,68 @@ export const createReservation = (req, res) => {
 
 export const cancelReservation = (req, res) => {
   const id = req.params.id;
-  connection.query(
-    "UPDATE reservations SET status = 'Cancelled' WHERE id = ?",
-    [id],
-    (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Error Interno" });
-      }
-      res.status(200).json({ message: "Reservation cancelled" });
+
+  connection.beginTransaction((err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error Interno" });
     }
-  );
+
+    connection.query(
+      "SELECT spotId FROM reservations WHERE id = ?",
+      [id],
+      (err, results) => {
+        if (err) {
+          return connection.rollback(() => {
+            console.error(err);
+            res.status(500).json({ message: "Error Interno" });
+          });
+        }
+
+        const spotId = results[0].spotId;
+
+        connection.query(
+          "UPDATE reservations SET status = 'Cancelled' WHERE id = ?",
+          [id],
+          (err) => {
+            if (err) {
+              return connection.rollback(() => {
+                console.error(err);
+                res.status(500).json({ message: "Error Interno" });
+              });
+            }
+
+            connection.query(
+              "UPDATE parkingSpots SET statusId = (SELECT id FROM parkingStatuses WHERE statusName = 'Available') WHERE id = ?",
+              [spotId],
+              (err) => {
+                if (err) {
+                  return connection.rollback(() => {
+                    console.error(err);
+                    res.status(500).json({ message: "Error Interno" });
+                  });
+                }
+
+                connection.commit((err) => {
+                  if (err) {
+                    return connection.rollback(() => {
+                      console.error(err);
+                      res.status(500).json({ message: "Error Interno" });
+                    });
+                  }
+
+                  res.status(200).json({
+                    message:
+                      "Reservación Cancelada y Estatus cambiado exitosamente",
+                  });
+                });
+              }
+            );
+          }
+        );
+      }
+    );
+  });
 };
 
 export const checkInReservation = (req, res) => {

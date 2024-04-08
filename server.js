@@ -9,7 +9,7 @@ import reservationRoutes from './src/routes/reservationRoutes.js';
 dotenv.config();
 
 const app = express();
-const client = mqtt.connect('mqtt:10.10.54.12:1883'); // replace with your MQTT server address and port
+const client = mqtt.connect('mqtt:192.168.100.94:1883');
 
 let clients = [];
 
