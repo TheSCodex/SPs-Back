@@ -99,6 +99,9 @@ void updateParkingSpotStatus(int spotId, const char* status) {
   if(WiFi.status()== WL_CONNECTED){
     String path = "/status/" + String(status) + "/" + String(spotId);
 
+    Serial.print("Requesting path: ");
+    Serial.println(path);
+
     httpClient.get(path);
 
     int statusCode = httpClient.responseStatusCode();
@@ -108,6 +111,10 @@ void updateParkingSpotStatus(int spotId, const char* status) {
     Serial.println(statusCode);
     Serial.print("Response: ");
     Serial.println(response);
+
+    if (statusCode != 200) {
+      Serial.println("Failed to update parking spot status");
+    }
   }
   else{
     Serial.println("WiFi Disconnected");

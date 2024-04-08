@@ -29,23 +29,70 @@ export const getReservationById = (req, res) => {
 };
 
 export const createReservation = (req, res) => {
-  const { userId, spotId, reservationTime, initialFee } = req.body;
-  const query =
-    "INSERT INTO reservations (userId, spotId, reservationTime, initialFee, status) VALUES (?, ?, ?, ?, 'Active')";
-  connection.query(
-    query,
-    [userId, spotId, reservationTime, initialFee],
-    (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Error Interno" });
-      }
-      res.status(201).json({
-        message: "Reservation created",
-        reservationId: results.insertId,
-      });
+  const { userId, reservationTime, initialFee } = req.body;
+
+  //Transacción para que si algo falla no se nos haga un desastre así grandote
+  connection.beginTransaction((err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error Interno" });
     }
-  );
+
+    const findSpotQuery =
+      "SELECT id FROM parkingSpots WHERE statusId = (SELECT id FROM parkingStatuses WHERE statusName = 'Available' OR statusName = 'Unoccupied') LIMIT 1";
+    connection.query(findSpotQuery, (err, results) => {
+      if (err) {
+        return connection.rollback(() => {
+          console.error(err);
+          res.status(500).json({ message: "Error Interno" });
+        });
+      }
+
+      if (results.length === 0) {
+        return res.status(400).json({ message: "No available parking spots" });
+      }
+
+      const spotId = results[0].id;
+      const createReservationQuery =
+        "INSERT INTO reservations (userId, spotId, reservationTime, initialFee, status) VALUES (?, ?, ?, ?, 'Active')";
+      connection.query(
+        createReservationQuery,
+        [userId, spotId, reservationTime, initialFee],
+        (err, results) => {
+          if (err) {
+            return connection.rollback(() => {
+              console.error(err);
+              res.status(500).json({ message: "Error Interno" });
+            });
+          }
+          const updateSpotStatusQuery =
+            "UPDATE parkingSpots SET statusId = (SELECT id FROM parkingStatuses WHERE statusName = 'Reserved') WHERE id = ?";
+          connection.query(updateSpotStatusQuery, [spotId], (err, results) => {
+            if (err) {
+              return connection.rollback(() => {
+                console.error(err);
+                res.status(500).json({ message: "Error Interno" });
+              });
+            }
+
+            connection.commit((err) => {
+              if (err) {
+                return connection.rollback(() => {
+                  console.error(err);
+                  res.status(500).json({ message: "Error Interno" });
+                });
+              }
+
+              res.status(201).json({
+                message: "Reservation created",
+                reservationId: results.insertId,
+              });
+            });
+          });
+        }
+      );
+    });
+  });
 };
 
 export const cancelReservation = (req, res) => {
