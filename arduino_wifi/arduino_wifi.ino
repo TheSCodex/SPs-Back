@@ -9,8 +9,8 @@ const int greenPin[NUM_SENSORS] = {6};
 
 const char* ssid = "Totalplay-5DAA";
 const char* password = "5DAAD5479GTARA2X"; 
-const char* mqtt_server = "192.168.100.94";
-const char* serverAddress = "192.168.100.94";
+const char* mqtt_server = "192.168.100.32";
+const char* serverAddress = "192.168.100.32";
 int serverPort = 8080;
 
 WiFiClient espClient1;
