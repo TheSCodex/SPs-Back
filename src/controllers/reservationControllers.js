@@ -28,6 +28,21 @@ export const getReservationById = (req, res) => {
   );
 };
 
+export const getReservationByUserID = (req, res) => {
+  const userId = req.params.userId;
+  connection.query(
+    "SELECT * FROM reservations WHERE userId = ?",
+    [userId],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Error Interno" });
+      }
+      res.status(200).json(results);
+    }
+  );
+};
+
 export const createReservation = (req, res) => {
   const { userId, spotId, reservationTime, initialFee } = req.body;
   const query =
