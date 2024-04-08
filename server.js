@@ -4,11 +4,12 @@ import cors from 'cors';
 import mqtt from 'mqtt';
 import userRoutes from './src/routes/userRoutes.js';
 import arduinoRoutes from './src/routes/arduinoRoutes.js';
+import reservationRoutes from './src/routes/reservationRoutes.js';
 
 dotenv.config();
 
 const app = express();
-const client = mqtt.connect('mqtt://192.168.100.1:1883'); // replace with your MQTT server address and port
+const client = mqtt.connect('mqtt:10.10.54.12:1883'); // replace with your MQTT server address and port
 
 let clients = [];
 
@@ -49,7 +50,7 @@ app.get('/events', (req, res) => {
   });
 });
 
-app.use('/', userRoutes, arduinoRoutes);
+app.use('/', userRoutes, arduinoRoutes, reservationRoutes);
 
 const URL = process.env.ORIGIN;
 const PORT = process.env.PORT;

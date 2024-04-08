@@ -5,6 +5,7 @@ const reservationRoutes = express.Router();
 
 reservationRoutes.get('/reservations', reservationControllers.getAllReservations);
 reservationRoutes.get('/reservations/:id', reservationControllers.getReservationById);
+reservationRoutes.get('/reservations/user/:userId', reservationControllers.getReservationByUserID);
 reservationRoutes.post('/reservation', reservationControllers.createReservation);
 reservationRoutes.put('/reservations/cancel/:id', reservationControllers.cancelReservation);
 reservationRoutes.put('/reservations/check-in/:id', reservationControllers.checkInReservation);
