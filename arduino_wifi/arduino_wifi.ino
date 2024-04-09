@@ -12,8 +12,8 @@ const int greenPin[NUM_LEDGREN] = {10,11,12,13,A0};
 
 const char* ssid = "Totalplay-5DAA";
 const char* password = "5DAAD5479GTARA2X"; 
-const char* mqtt_server = "192.168.100.32";
-const char* serverAddress = "192.168.100.32";
+const char* mqtt_server = "192.168.100.94";
+const char* serverAddress = "192.168.100.94";
 int serverPort = 8080;
 
 WiFiClient espClient1;
@@ -61,13 +61,6 @@ void loop(){
   for(int i=0; i<NUM_SENSORS; i++){
     int value = digitalRead(sensorPin[i]);  //lectura digital de pin
 
-    Serial.print("Sensor ");
-    Serial.print(i);
-    Serial.print(" value: ");
-    Serial.println(value);
-    Serial.print("IP Address: ");
-    Serial.println(WiFi.localIP());
-
     if (value != lastState[i] && millis() - lastStateChangeTime[i] > 2000) {
       lastState[i] = value;
       lastStateChangeTime[i] = millis();
@@ -99,6 +92,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     if (client.connect("arduinoClient")) {
       Serial.println("connected");
+      client.subscribe("parking/pen");  // Add this line
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -109,6 +103,7 @@ void reconnect() {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.println("Callback triggered");
   String topicStr = topic; 
   String payloadStr;
 
@@ -116,14 +111,23 @@ void callback(char* topic, byte* payload, unsigned int length) {
     payloadStr += (char)payload[i];
   }
 
+  Serial.print("Received message on topic: ");
+  Serial.println(topicStr);
+  Serial.print("Message payload: ");
+  Serial.println(payloadStr);
+
   if(topicStr == "parking/pen"){
     if(payloadStr == "open"){
+      Serial.println("Received 'open' command");
       myservo.write(posOpen);
     }else if(payloadStr == "close"){
+      Serial.println("Received 'close' command");
       myservo.write(posClose);
     }
   }
 }
+
+
 
 void updateParkingSpotStatus(int spotId, const char* status) {
   if(WiFi.status()== WL_CONNECTED){

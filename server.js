@@ -35,6 +35,7 @@ const openParkingPen = (req, res) => {
       console.error(err);
       return res.status(500).json({ message: "Error Interno" });
     }
+    console
     res.status(200).json({ message: "Parking pen opened" });
   });
 };
