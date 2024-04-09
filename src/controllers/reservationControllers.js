@@ -135,7 +135,7 @@ export const cancelReservation = (req, res) => {
         const spotId = results[0].spotId;
 
         connection.query(
-          "UPDATE reservations SET status = 'Cancelled' WHERE id = ?",
+          "DELETE FROM reservations WHERE id = ?",
           [id],
           (err) => {
             if (err) {
