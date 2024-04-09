@@ -1,3 +1,4 @@
+#include <Servo.h>
 #include <WiFiS3.h>
 #include <PubSubClient.h>
 #include <ArduinoHttpClient.h>
@@ -23,6 +24,11 @@ HttpClient httpClient = HttpClient(espClient2, serverAddress, serverPort);
 unsigned long lastStateChangeTime[NUM_SENSORS] = {0};
 int lastState[NUM_SENSORS] = {-1};
 
+Servo myservo;
+int servoPin = A1;
+int posOpen = 15;
+int posClose = 135;
+
 void setup() {
   Serial.begin(9600);
 
@@ -34,6 +40,11 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   client.setServer(mqtt_server, 1883);
+
+  client.setCallback(callback);  // set the MQTT callback function
+
+  myservo.attach(servoPin);
+
   for(int i=0; i<NUM_SENSORS; i++){
     pinMode(redPin[i], OUTPUT);
     pinMode(greenPin[i], OUTPUT);
@@ -93,6 +104,23 @@ void reconnect() {
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
       delay(5000);
+    }
+  }
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  String topicStr = topic; 
+  String payloadStr;
+
+  for (int i = 0; i < length; i++) {
+    payloadStr += (char)payload[i];
+  }
+
+  if(topicStr == "parking/pen"){
+    if(payloadStr == "open"){
+      myservo.write(posOpen);
+    }else if(payloadStr == "close"){
+      myservo.write(posClose);
     }
   }
 }

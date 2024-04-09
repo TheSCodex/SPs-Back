@@ -29,6 +29,26 @@ client.on('message', (topic, message) => {
   });
 });
 
+const openParkingPen = (req, res) => {
+  client.publish('parking/pen', 'open', (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error Interno" });
+    }
+    res.status(200).json({ message: "Parking pen opened" });
+  });
+};
+
+const closeParkingPen = (req, res) => {
+  client.publish('parking/pen', 'close', (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error Interno" });
+    }
+    res.status(200).json({ message: "Parking pen closed" });
+  });
+};
+
 app.use(express.json());
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -49,6 +69,9 @@ app.get('/events', (req, res) => {
     clients = clients.filter((client) => client !== res);
   });
 });
+
+app.post('/openParkingPen', openParkingPen);
+app.post('/closeParkingPen', closeParkingPen);
 
 app.use('/', userRoutes, arduinoRoutes, reservationRoutes);
 
