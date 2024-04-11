@@ -9,6 +9,7 @@
 const int sensorPin[NUM_SENSORS] = {0,1,2,3,4};
 const int redPin[NUM_LEDRED] = {5,6,7,8,9};
 const int greenPin[NUM_LEDGREN] = {10,11,12,13,A0};
+const int sensorPinToId[NUM_SENSORS] = {1, 3, 5, 7, 9};
 
 const char* ssid = "Totalplay-5DAA";
 const char* password = "5DAAD5479GTARA2X"; 
@@ -66,7 +67,7 @@ void loop(){
       lastStateChangeTime[i] = millis();
 
       char message[50];
-      sprintf(message, "{\"id\":%d, \"state\":%d}", sensorPin[i], value);
+      sprintf(message, "{\"id\":%d, \"state\":%d}", sensorPinToId[i], value);  // Use the mapped ID
 
       if (value == LOW) {
         // Si el sensor está tapado
