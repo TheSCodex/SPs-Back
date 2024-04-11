@@ -30,7 +30,7 @@ CREATE TABLE `sps`.`reservations` (
   `checkOutTime` DATETIME,
   `initialFee` DECIMAL(5,2),
   `totalCost` DECIMAL(5,2),
-  `status` ENUM('Active', 'Cancelled', 'Completed'),
+  `status` ENUM('Active', 'Cancelled', 'Checked-In', 'Completed'),
   PRIMARY KEY (`id`),
   FOREIGN KEY (`userId`) REFERENCES `sps`.`users`(`id`),
   FOREIGN KEY (`spotId`) REFERENCES `sps`.`parkingSpots`(`id`)
@@ -46,7 +46,14 @@ INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot2', 1);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot3', 1);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot4', 1);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot5', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot6', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot7', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot8', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot9', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot10', 1);
+
 
 SELECT * FROM `sps`.`parkingSpots`;
 SELECT * FROM `sps`.`parkingstatuses`;
 SELECT * FROM `sps`.`reservations`;
+DELETE FROM `sps`.`reservations` WHERE userId = 4;

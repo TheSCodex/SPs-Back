@@ -182,7 +182,7 @@ export const checkInReservation = (req, res) => {
   const id = req.params.id;
   const checkInTime = new Date();
   connection.query(
-    "UPDATE reservations SET checkInTime = ?, status = 'Occupied' WHERE id = ?",
+    "UPDATE reservations SET checkInTime = ?, status = 'Checked-In' WHERE id = ?",
     [checkInTime, id],
     (err, results) => {
       if (err) {
