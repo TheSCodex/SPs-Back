@@ -1,16 +1,19 @@
+#include <Servo.h>
 #include <WiFiS3.h>
 #include <PubSubClient.h>
 #include <ArduinoHttpClient.h>
 #define NUM_SENSORS 5
+#define NUM_LEDRED 5
+#define NUM_LEDGREN 5
 
 const int sensorPin[NUM_SENSORS] = {0,1,2,3,4};
-const int redPin[NUM_SENSORS] = {5};
-const int greenPin[NUM_SENSORS] = {6};
+const int redPin[NUM_LEDRED] = {5,6,7,8,9};
+const int greenPin[NUM_LEDGREN] = {10,11,12,13,A0};
 
 const char* ssid = "Totalplay-5DAA";
 const char* password = "5DAAD5479GTARA2X"; 
-const char* mqtt_server = "192.168.100.32";
-const char* serverAddress = "192.168.100.32";
+const char* mqtt_server = "192.168.100.94";
+const char* serverAddress = "192.168.100.94";
 int serverPort = 8080;
 
 WiFiClient espClient1;
@@ -20,6 +23,11 @@ HttpClient httpClient = HttpClient(espClient2, serverAddress, serverPort);
 
 unsigned long lastStateChangeTime[NUM_SENSORS] = {0};
 int lastState[NUM_SENSORS] = {-1};
+
+Servo myservo;
+int servoPin = A1;
+int posOpen = 15;
+int posClose = 135;
 
 void setup() {
   Serial.begin(9600);
@@ -32,6 +40,11 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   client.setServer(mqtt_server, 1883);
+
+  client.setCallback(callback);  // set the MQTT callback function
+
+  myservo.attach(servoPin);
+
   for(int i=0; i<NUM_SENSORS; i++){
     pinMode(redPin[i], OUTPUT);
     pinMode(greenPin[i], OUTPUT);
@@ -47,13 +60,6 @@ void loop(){
 
   for(int i=0; i<NUM_SENSORS; i++){
     int value = digitalRead(sensorPin[i]);  //lectura digital de pin
-
-    Serial.print("Sensor ");
-    Serial.print(i);
-    Serial.print(" value: ");
-    Serial.println(value);
-    Serial.print("IP Address: ");
-    Serial.println(WiFi.localIP());
 
     if (value != lastState[i] && millis() - lastStateChangeTime[i] > 2000) {
       lastState[i] = value;
@@ -86,6 +92,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     if (client.connect("arduinoClient")) {
       Serial.println("connected");
+      client.subscribe("parking/pen");  // Add this line
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -94,6 +101,33 @@ void reconnect() {
     }
   }
 }
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.println("Callback triggered");
+  String topicStr = topic; 
+  String payloadStr;
+
+  for (int i = 0; i < length; i++) {
+    payloadStr += (char)payload[i];
+  }
+
+  Serial.print("Received message on topic: ");
+  Serial.println(topicStr);
+  Serial.print("Message payload: ");
+  Serial.println(payloadStr);
+
+  if(topicStr == "parking/pen"){
+    if(payloadStr == "open"){
+      Serial.println("Received 'open' command");
+      myservo.write(posOpen);
+    }else if(payloadStr == "close"){
+      Serial.println("Received 'close' command");
+      myservo.write(posClose);
+    }
+  }
+}
+
+
 
 void updateParkingSpotStatus(int spotId, const char* status) {
   if(WiFi.status()== WL_CONNECTED){

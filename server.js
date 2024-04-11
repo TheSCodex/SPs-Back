@@ -9,7 +9,7 @@ import reservationRoutes from './src/routes/reservationRoutes.js';
 dotenv.config();
 
 const app = express();
-const client = mqtt.connect('mqtt:192.168.100.94:1883'); // replace with your MQTT server address and port
+const client = mqtt.connect('mqtt:192.168.1.75:1883'); // replace with your MQTT server address and port
 
 let clients = [];
 
@@ -28,6 +28,27 @@ client.on('message', (topic, message) => {
     res.write(`data: ${message.toString()}\n\n`);
   });
 });
+
+const openParkingPen = (req, res) => {
+  client.publish('parking/pen', 'open', (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error Interno" });
+    }
+    console
+    res.status(200).json({ message: "Parking pen opened" });
+  });
+};
+
+const closeParkingPen = (req, res) => {
+  client.publish('parking/pen', 'close', (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Error Interno" });
+    }
+    res.status(200).json({ message: "Parking pen closed" });
+  });
+};
 
 app.use(express.json());
 app.use((err, req, res, next) => {
@@ -49,6 +70,9 @@ app.get('/events', (req, res) => {
     clients = clients.filter((client) => client !== res);
   });
 });
+
+app.post('/openParkingPen', openParkingPen);
+app.post('/closeParkingPen', closeParkingPen);
 
 app.use('/', userRoutes, arduinoRoutes, reservationRoutes);
 
