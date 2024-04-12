@@ -196,6 +196,8 @@ export const checkInReservation = (req, res) => {
 
 export const checkOutReservation = (req, res) => {
   const id = req.params.id;
+  const initialFee = req.body.initialFee;
+  const hourlyRate = 10; // Definir la tarifa por hora
   const checkOutTime = new Date();
   connection.query(
     "SELECT checkInTime FROM reservations WHERE id = ?",
@@ -206,8 +208,9 @@ export const checkOutReservation = (req, res) => {
         return res.status(500).json({ message: "Error Interno" });
       }
       const checkInTime = new Date(results[0].checkInTime);
-      const hours = Math.ceil((checkOutTime - checkInTime) / 1000 / 60 / 60);
-      const totalCost = hours * hourlyRate;
+      const timeDiff = checkOutTime - checkInTime;
+      const hours = timeDiff >= 3600000 ? Math.ceil(timeDiff / 1000 / 60 / 60) : 0; // Si la diferencia es mayor o igual a una hora, contar una hora, de lo contrario, contar 0 horas
+      const totalCost = (hours * hourlyRate) + parseFloat(initialFee); // Calcula el costo total sumando la tarifa por hora y la tarifa inicial
       connection.query(
         "UPDATE reservations SET checkOutTime = ?, totalCost = ?, status = 'Completed' WHERE id = ?",
         [checkOutTime, totalCost, id],
@@ -224,3 +227,18 @@ export const checkOutReservation = (req, res) => {
     }
   );
 };
+
+export const deleteReservation = (req,res) => {
+  const id = req.params.id;
+  connection.query(
+    "DELETE FROM reservations WHERE id = ?", 
+    [id],
+    (err, results)=> {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+
+      res.status(200).json({ message: "Reservation deleted successfully" });
+    })
+}

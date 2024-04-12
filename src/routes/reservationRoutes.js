@@ -10,5 +10,6 @@ reservationRoutes.post('/reservation', reservationControllers.createReservation)
 reservationRoutes.put('/reservations/cancel/:id', reservationControllers.cancelReservation);
 reservationRoutes.put('/reservations/check-in/:id', reservationControllers.checkInReservation);
 reservationRoutes.put('/reservations/check-out/:id', reservationControllers.checkOutReservation);
+reservationRoutes.delete('/reservations/:id', reservationControllers.deleteReservation);
 
 export default reservationRoutes;

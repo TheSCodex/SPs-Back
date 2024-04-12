@@ -42,15 +42,15 @@ INSERT INTO `sps`.`parkingStatuses` (`statusName`) VALUES ('Occupied');
 INSERT INTO `sps`.`parkingStatuses` (`statusName`) VALUES ('Unoccupied');
 
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot1', 1);
-INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot2', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot2', 2);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot3', 1);
-INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot4', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot4', 2);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot5', 1);
-INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot6', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot6', 2);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot7', 1);
-INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot8', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot8', 2);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot9', 1);
-INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot10', 1);
+INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot10', 2);
 
 
 SELECT * FROM `sps`.`parkingSpots`;
