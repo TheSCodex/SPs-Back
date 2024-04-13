@@ -1,3 +1,4 @@
+-- Active: 1711036534663@@127.0.0.1@3306@sps
 CREATE DATABASE `sps`;
 DROP DATABASE `sps`;
 CREATE TABLE `sps`.`users` (
@@ -10,7 +11,7 @@ CREATE TABLE `sps`.`users` (
 );
 CREATE TABLE `sps`.`parkingStatuses` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `statusName` ENUM('Available', 'Reserved', 'Occupied', 'Unoccupied'),
+    `statusName` ENUM('Available', 'Reserved', 'Occupied', 'Unoccupied', 'Wrong'),
     PRIMARY KEY(`id`) 
 );
 CREATE TABLE `sps`.`parkingSpots` (
@@ -40,6 +41,8 @@ INSERT INTO `sps`.`parkingStatuses` (`statusName`) VALUES ('Available');
 INSERT INTO `sps`.`parkingStatuses` (`statusName`) VALUES ('Reserved');
 INSERT INTO `sps`.`parkingStatuses` (`statusName`) VALUES ('Occupied');
 INSERT INTO `sps`.`parkingStatuses` (`statusName`) VALUES ('Unoccupied');
+INSERT INTO `sps`.`parkingStatuses` (`statusName`) VALUES ('Wrong');
+
 
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot1', 1);
 INSERT INTO `sps`.`parkingSpots` (`spotCode`, `statusId`) VALUES ('Spot2', 2);

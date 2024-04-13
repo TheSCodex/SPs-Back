@@ -197,8 +197,9 @@ export const checkInReservation = (req, res) => {
 export const checkOutReservation = (req, res) => {
   const id = req.params.id;
   const initialFee = req.body.initialFee;
-  const hourlyRate = 10; // Definir la tarifa por hora
+  const hourlyRate = 10; 
   const checkOutTime = new Date();
+  console.log(id);
   connection.query(
     "SELECT checkInTime FROM reservations WHERE id = ?",
     [id],
@@ -209,8 +210,8 @@ export const checkOutReservation = (req, res) => {
       }
       const checkInTime = new Date(results[0].checkInTime);
       const timeDiff = checkOutTime - checkInTime;
-      const hours = timeDiff >= 3600000 ? Math.ceil(timeDiff / 1000 / 60 / 60) : 0; // Si la diferencia es mayor o igual a una hora, contar una hora, de lo contrario, contar 0 horas
-      const totalCost = (hours * hourlyRate) + parseFloat(initialFee); // Calcula el costo total sumando la tarifa por hora y la tarifa inicial
+      const hours = timeDiff >= 3600000 ? Math.ceil(timeDiff / 1000 / 60 / 60) : 0; 
+      const totalCost = (hours * hourlyRate) + parseFloat(initialFee); 
       connection.query(
         "UPDATE reservations SET checkOutTime = ?, totalCost = ?, status = 'Completed' WHERE id = ?",
         [checkOutTime, totalCost, id],
@@ -242,3 +243,33 @@ export const deleteReservation = (req,res) => {
       res.status(200).json({ message: "Reservation deleted successfully" });
     })
 }
+
+export const occupiedReservationSpot = (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    "SELECT spotId FROM reservations WHERE id = ?",
+    [id],
+    (err, results) => {
+      if (err) {
+        return connection.rollback(() => {
+          console.error(err);
+          res.status(500).json({ message: "Error Interno" });
+        });
+      }
+
+      const spotId = results[0].spotId;
+
+      connection.query(
+        "UPDATE parkingSpots SET statusId = 5 WHERE id = ?",
+        [spotId],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ message: "Error Interno" });
+          }
+          res.status(200).json({ message: "Updated successfully" });
+        }
+      );
+    }
+  );
+};

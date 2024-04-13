@@ -17,7 +17,7 @@ client.on('connect', () => {
   console.log('Connected to MQTT server');
   client.subscribe('arduino/sensor', (err) => {
     if (err) {
-      console.error('Failed to subscribe to topic:', err);
+      console.log('Failed to subscribe to topic:', err);
     }
   });
 });

@@ -11,10 +11,10 @@ const int redPin[NUM_LEDRED] = {5,6,7,8,9};
 const int greenPin[NUM_LEDGREN] = {10,11,12,13,A0};
 const int sensorPinToId[NUM_SENSORS] = {1, 3, 5, 7, 9};
 
-const char* ssid = "Totalplay-5DAA";
-const char* password = "5DAAD5479GTARA2X"; 
-const char* mqtt_server = "192.168.100.94";
-const char* serverAddress = "192.168.100.94";
+const char* ssid = "INFINITUM8A1C_2.4";
+const char* password = "g8qTIzqvw9"; 
+const char* mqtt_server = "192.168.1.75";
+const char* serverAddress = "192.168.1.75";
 int serverPort = 8080;
 
 WiFiClient espClient1;
@@ -74,19 +74,20 @@ void loop(){
         Serial.println("Espacio Ocupado");  //zona oscura
         digitalWrite(redPin[i], HIGH);
         digitalWrite(greenPin[i], LOW);
-        updateParkingSpotStatus(i+1, "occupied");
+        updateParkingSpotStatus(sensorPinToId[i], "occupied");
       } else {
         // Si el sensor no está tapado
         digitalWrite(greenPin[i], HIGH);
         digitalWrite(redPin[i], LOW);
         Serial.println("Espacio Libre");  //zona libre
-        updateParkingSpotStatus(i+1, "unoccupied");
+        updateParkingSpotStatus(sensorPinToId[i], "unoccupied");
       }
       client.publish("arduino/sensor", message);
     }
   }
   delay(1000);
 }
+
 
 void reconnect() {
   while (!client.connected()) {
